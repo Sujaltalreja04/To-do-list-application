@@ -5,7 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced To-Do List</title>
     <style>
-        /* Your CSS styles go here */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 70%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .open,
+        .delete {
+            color: #e74c3c;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        #fileInput {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -21,6 +96,9 @@
     <ul id="taskList"></ul>
 </div>
 
+<!-- Add an anchor tag for navigation -->
+<a id="openSection" style="display: none;"></a>
+
 <script>
     // Function to add a task to the list
     function addTask() {
@@ -29,7 +107,10 @@
 
         if (taskInput.value.trim() !== '') {
             var li = document.createElement('li');
-            li.innerHTML = taskInput.value + '<span class="delete" onclick="removeTask(this)">Delete</span>';
+            var taskText = taskInput.value.trim();
+            li.innerHTML = taskText +
+                '<span class="open" onclick="openTask(\'' + taskText + '\')">Open</span>' +
+                '<span class="delete" onclick="removeTask(this)">Delete</span>';
             taskList.appendChild(li);
             taskInput.value = '';
         }
@@ -41,6 +122,13 @@
         li.remove();
     }
 
+    // Function to open a task and navigate to the openSection
+    function openTask(taskText) {
+        alert('Task Details:\n' + taskText);
+        // Navigate to the openSection
+        location.href = '#openSection';
+    }
+
     // Function to save tasks to local storage
     function saveTasks() {
         var taskList = document.getElementById('taskList');
@@ -49,7 +137,7 @@
         // Iterate through each task in the list
         taskList.querySelectorAll('li').forEach(function (li) {
             var taskText = li.textContent.trim();
-            tasks.push(taskText.substring(0, taskText.length - 6)); // Remove 'Delete' from task text
+            tasks.push(taskText.substring(0, taskText.length - 12)); // Remove 'OpenDelete' from task text
         });
 
         // Save tasks to local storage as JSON
@@ -81,7 +169,9 @@
 
         tasks.forEach(function (task) {
             var li = document.createElement('li');
-            li.innerHTML = task + '<span class="delete" onclick="removeTask(this)">Delete</span>';
+            li.innerHTML = task +
+                '<span class="open" onclick="openTask(\'' + task + '\')">Open</span>' +
+                '<span class="delete" onclick="removeTask(this)">Delete</span>';
             taskList.appendChild(li);
         });
 
